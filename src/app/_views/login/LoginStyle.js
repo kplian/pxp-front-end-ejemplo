@@ -10,7 +10,7 @@ export const useStyles = theme =>({
         backgroundPosition: 'center',
     },
     fondo:{
-        background: 'rgb(233,228,228)',
+        background: 'rgb(228,223,223)',
         flex: 1,
         padding: theme.spacing(6, 4),
     },

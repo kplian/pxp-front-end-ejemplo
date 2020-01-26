@@ -1,38 +1,48 @@
-import React from "react";
-import {useStyles} from "./DashboardStyle";
+import React from 'react';
+import { ThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+import Hidden from '@material-ui/core/Hidden';
+import ComponentHeader from "./components/header/Header";
+import ComponentNavigation from "./components/navigation/Navigation";
+import Content from "./components/content/Content";
+import {styles, theme} from "./DashboardStyle";
 import Copyright from "../../_components/Copyright";
-import ComponentHeader from "./components/Header";
-import ComponentNavigation from "./components/Navigation";
 
-export default function DashboardPage() {
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
+function DashboardPage(props) {
+    const { classes } = props;
+    const drawerWidth = 256;
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
     };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-    return(
-        <div className={classes.root}>
-            <CssBaseline />
-            <ComponentHeader  clickHandler={handleDrawerOpen}
-                              data={{titulo:"PXP",
-                                  estado: open}}/>
-            <ComponentNavigation  clickHandler={handleDrawerClose}
-                                  data={{estado: open}}/>
-            <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
-                    <Box pt={4}>
+    return (
+        <ThemeProvider theme={theme}>
+            <div className={classes.root}>
+                <CssBaseline />
+                <nav className={classes.drawer}>
+                    <Hidden smUp implementation="js">
+                        <ComponentNavigation
+                            PaperProps={{ style: { width: drawerWidth } }}
+                            variant="temporary"
+                            open={mobileOpen}
+                            onClose={handleDrawerToggle}
+                        />
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                        <ComponentNavigation PaperProps={{ style: { width: drawerWidth } }} />
+                    </Hidden>
+                </nav>
+                <div className={classes.app}>
+                    <ComponentHeader onDrawerToggle={handleDrawerToggle} />
+                    <main className={classes.main}>
+                        <Content/>
+                    </main>
+                    <footer className={classes.footer}>
                         <Copyright />
-                    </Box>
-                </Container>
-            </main>
-        </div>
+                    </footer>
+                </div>
+            </div>
+        </ThemeProvider>
     );
 }
+export default withStyles(styles)(DashboardPage);
