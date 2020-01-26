@@ -7,11 +7,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { useStyles } from './LoginStyle'
-// import Alerts from "./components/Alerts";
+import Alerts from "./components/Alerts";
 import From from "./components/Form";
 import {userService} from "../../_services/LoginService";
 
 class LoginPage extends React.Component {
+    ROOT ;
+    detalle;
     constructor(props) {
         super(props);
         userService.onSalir();
@@ -31,32 +33,46 @@ class LoginPage extends React.Component {
         userService.onLogin(datos.username,datos.password)
             .then(
                 user => {
-                    // user.ROOT.error
-                    // user.ROOT.detalle.mensaje
-                    console.log(user);
-                    const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
+                    if (user.ROOT === undefined){
+                        this.setState({ loading: false });
+                        const { from } = this.props.location.state || { from: { pathname: "/" } };
+                        this.props.history.push(from);
+                    }else {
+                        this.setState({   loading: false,
+                                                submitted: true,
+                                                error: user.ROOT.detalle.mensaje });
+                    }
                 },
                 error => this.setState({ error, loading: false })
             );
     }
     render(){
         const { classes } = this.props;
-        const { loading } = this.state;
+        const { loading,submitted,error} = this.state;
         return (
             <Grid container component="main" className={classes.root}>
                 <CssBaseline />
-                <Grid item xs={false} sm={4} md={7} className={classes.image} />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Grid item
+                      xs={false}
+                      sm={4}
+                      md={7}
+                      className={classes.image} />
+                <Grid item
+                      xs={12}
+                      sm={8}
+                      md={5}
+                      component={Paper}
+                      elevation={6} square
+                      className={classes.fondo}>
                     <div className={classes.paper}>
                         <Avatar className={classes.avatar}>
                             <LockOutlinedIcon />
                         </Avatar>
-                        <Typography component="h1" variant="h5">
+                        <Typography component="h1" variant="h5" color="primary">
                             PXP
                         </Typography>
-
-                        <From enviar={{
+                        {submitted && <Alerts mensaje={error}/>}
+                         <From enviar={{
                             onLogin: this.onLogin,
                             loading: loading
                         }}/>

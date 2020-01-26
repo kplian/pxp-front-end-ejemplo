@@ -7,22 +7,27 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { green } from '@material-ui/core/colors';
+import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
 
-import { withStyles } from '@material-ui/core/styles';
-
+let theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#E7584A',
+        },
+    },
+});
 const useStyles = theme =>({
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '70%',
         marginTop: theme.spacing(1),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
     buttonProgress: {
-        color: green[500],
+        color: '#fbfdff',
         position: 'absolute',
         top: '50%',
         left: '50%',
@@ -64,6 +69,7 @@ class From extends React.Component{
             [classes.buttonSuccess]: this.props.enviar.loading ,
         });
         return (
+            <ThemeProvider theme={theme}>
             <form className={classes.form} onSubmit={this.onSubmit}>
                 <TextField  id="username"
                             name="username"
@@ -73,6 +79,7 @@ class From extends React.Component{
                             required
                             fullWidth
                             type="text"
+                            autoComplete="off"
                             value={username} onChange={this.handleChange}/>
 
                 <TextField  variant="outlined"
@@ -87,7 +94,8 @@ class From extends React.Component{
                             value={password} onChange={this.handleChange}/>
 
                 <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
+                    control={<Checkbox value="remember"
+                                       color="primary"/>}
                     label="Recuérdame"/>
 
                 <Button
@@ -99,17 +107,9 @@ class From extends React.Component{
                     className={buttonClassname}>
                     Iniciar sesión
                 </Button>
-                {this.props.enviar.loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-
-                <Grid container>
-                    <Grid item xs>
-                        <Link href="#" variant="body2">
-                            {"No tienes una cuenta? Regístrate"}
-                        </Link>
-                    </Grid>
-                </Grid>
+                {this.props.enviar.loading && <CircularProgress size={100} className={classes.buttonProgress} />}
                 <Box mt={5}>
-                    <Typography variant="body2" color="textSecondary" align="center">
+                    <Typography variant="body2" color="primary" align="center">
                         {'Copyright © '}
                         <Link color="inherit" href="http://www.kplian.com/">
                             Powered by KPLIAN LTDA
@@ -119,6 +119,7 @@ class From extends React.Component{
                     </Typography>
                 </Box>
             </form>
+            </ThemeProvider>
         )
     }
 }

@@ -5,7 +5,6 @@ export const userService = {
     onLogin,
     onSalir
 };
-
 function onLogin(username, password) {
     const client = new clientRestPxp(url, 'IP');
     client.setCredentialsPxp(username, md5(password));
